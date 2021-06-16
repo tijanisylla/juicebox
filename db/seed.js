@@ -93,7 +93,7 @@ async function createInitialUsers() {
       name: 'Joshua',
       location: 'Upper East Side'
     });
-
+    
     console.log("Finished creating users!");
   } catch (error) {
     console.error("Error creating users!");

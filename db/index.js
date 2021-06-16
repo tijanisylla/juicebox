@@ -51,6 +51,7 @@ async function updateUser(id, fields = {}) {
   }
 }
 
+
 async function getAllUsers() {
   try {
     const { rows } = await client.query(`
@@ -59,6 +60,26 @@ async function getAllUsers() {
     `);
 
     return rows;
+  } catch (error) {
+    throw error;
+  }
+}
+
+
+async function getUserByUsername(username) {
+  try {
+    const { rows: [ user ] } = await client.query(`
+      SELECT  *
+      FROM users
+      WHERE username=$1
+    `, [ username ]);
+    if (!user) {
+      throw {
+        name: "UserNotFoundError",
+        message: "A user with that username does not exist"
+      }
+    }
+    return user;
   } catch (error) {
     throw error;
   }
@@ -314,7 +335,7 @@ async function getAllTags() {
       FROM tags;
     `);
 
-    return { rows }
+    return rows
   } catch (error) {
     throw error;
   }
@@ -327,6 +348,7 @@ module.exports = {
   updateUser,
   getAllUsers,
   getUserById,
+  getUserByUsername,
   createPost,
   updatePost,
   getAllPosts,
@@ -336,4 +358,5 @@ module.exports = {
   getAllTags,
   createPostTag,
   addTagsToPost
+
 }
